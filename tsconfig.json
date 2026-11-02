@@ -1,0 +1,34 @@
+{
+	"compilerOptions": {
+		// required
+		"allowSyntheticDefaultImports": true,
+		"jsx": "react",
+		"jsxFactory": "React.createElement",
+		"jsxFragmentFactory": "React.Fragment",
+		"module": "preserve",
+		"moduleResolution": "bundler",
+		"noLib": true,
+		"resolveJsonModule": true,
+		"experimentalDecorators": true,
+		"forceConsistentCasingInFileNames": true,
+		"moduleDetection": "force",
+		"strict": true,
+		"target": "ESNext",
+		"typeRoots": ["node_modules/@rbxts", "node_modules/@flamework-experimental"],
+		// TypeScript 7 loads no type-root package by itself: these are the globals roblox-ts needs.
+		"types": ["types", "compiler-types"],
+
+		// configurable
+		"rootDir": "src",
+		"outDir": "out",
+		// Imports from src/, such as "shared/network" (what "baseUrl": "src" did in TypeScript 5).
+		"paths": { "*": ["./src/*"] },
+
+		"plugins": [
+			// Turns Flamework on in rbxtsc-fw, which has it compiled in: no npm package to install.
+			{
+				"transform": "@flamework-experimental/transformer"
+			}
+		]
+	}
+}
