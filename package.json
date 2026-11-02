@@ -6,6 +6,7 @@
 	"scripts": {
 		"build": "rbxtsc-fw",
 		"watch": "rbxtsc-fw -w",
+		"typecheck": "tsc --noEmit -p . --skipLibCheck",
 		"serve": "rojo serve",
 		"place": "rojo build -o place.rbxl",
 		"format": "prettier --write src"

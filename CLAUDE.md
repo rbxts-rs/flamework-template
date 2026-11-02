@@ -89,8 +89,8 @@ use bun here. They are written for roblox-ts 3.0.0 with Flamework's npm transfor
 - The editor must run TypeScript 7 (the "TypeScript 7" extension, `.vscode/settings.json`). VS
   Code's built-in TypeScript 5 service misreads `tsconfig.json` and the iterables of
   `@rbxts/compiler-types`, and reports errors the build does not have. To check from the command
-  line: `bunx tsc --noEmit -p . --skipLibCheck` (`@rbxts/types` has errors of its own that the
-  build never reports).
+  line: `bun run typecheck` (TypeScript 7, `--skipLibCheck`: `@rbxts/types` has errors of its
+  own that the build never reports).
 - `rbxtsc-fw` follows TypeScript 7.1 where it differs from TypeScript 5: some diagnostics,
   the order of union members and exports, and the names of Flamework's generated locals in
   `out/` differ from a roblox-ts 3.0.0 build; the behaviour does not.

@@ -76,9 +76,9 @@ not have.
   extension, VS Code falls back to its TypeScript 5 service and its false errors.
 - The roblox-ts extension (`roblox-ts.vscode-roblox-ts`) is a plugin of the TypeScript 5 service and
   starts the npm `rbxtsc`, so it does nothing here. Use `bun run watch` in a terminal.
-- From the command line, `bunx tsc --noEmit -p . --skipLibCheck` checks the project with the same
-  TypeScript 7 (`--skipLibCheck`: `@rbxts/types` has errors of its own that the build never
-  reports).
+- From the command line, `bun run typecheck` checks the project with the same TypeScript 7
+  (`tsc --noEmit --skipLibCheck`; `@rbxts/types` has errors of its own that the build never
+  reports, hence `--skipLibCheck`).
 
 ## Layout
 
