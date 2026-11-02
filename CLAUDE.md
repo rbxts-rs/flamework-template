@@ -138,9 +138,11 @@ Read `node_modules/@flamework-experimental/core/docs/ai/testing.md` before you w
   line: `bun run typecheck` (TypeScript 7, the package and the game, `--skipLibCheck`:
   `@rbxts/types` has errors of its own that the build never reports), after
   `bun run build:package`: the game's check reads the package's typings.
-- `rbxtsc-fw` follows TypeScript 7.1 where it differs from TypeScript 5: some diagnostics,
-  the order of union members and exports, and the names of Flamework's generated locals in
-  `out/` differ from a roblox-ts 3.0.0 build; the behaviour does not.
+- `rbxtsc-fw` follows roblox-ts's master (68648b0, newer than the npm 3.0.0) and TypeScript 7.1.
+  Next to a roblox-ts 3.0.0 build, `out/` differs in layout, not in behaviour: doc comments lose
+  their `*` margins, some temporaries are gone (`local _player = player`), and the names of
+  Flamework's generated locals, the order of union members and exports, and some diagnostics
+  differ.
 - `default.project.json` maps all of `node_modules/@flamework-experimental` in one line, so the
   place gets more than code: core's docs as Folders, `core.docs` holding the empty `core.docs.ai`
   and `core.docs.guide`. All expected; nothing reads them.
