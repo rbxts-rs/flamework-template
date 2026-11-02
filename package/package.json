@@ -1,0 +1,27 @@
+{
+	"name": "@your-scope/player-events",
+	"version": "0.1.0",
+	"description": "A Flamework v2 plugin: providers implement OnPlayerJoined and OnPlayerLeft to hear about players.",
+	"main": "out/init.luau",
+	"types": "out/index.d.ts",
+	"files": ["out", "flamework.build"],
+	"scripts": {
+		"build": "rbxtsc-fw",
+		"watch": "rbxtsc-fw -w",
+		"prepublishOnly": "rbxtsc-fw"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"peerDependencies": {
+		"@flamework-experimental/core": "^2.0.0-beta.0"
+	},
+	"dependencies": {
+		"@rbxts/services": "^1.6.0"
+	},
+	"devDependencies": {
+		"@flamework-experimental/core": "2.0.0-beta.0",
+		"@rbxts/compiler-types": "https://github.com/rbxts-rs/compiler-types/releases/download/v3.0.0-types.1-ts7.0/rbxts-compiler-types-3.0.0-types.1-ts7.0.tgz",
+		"@rbxts/types": "^1.0.955"
+	}
+}

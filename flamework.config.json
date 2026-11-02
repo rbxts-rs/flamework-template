@@ -1,3 +1,5 @@
 {
-	"$schema": "https://cdn.jsdelivr.net/npm/@flamework-experimental/transformer@2.0.0-beta.0/flamework.config.schema.json"
+	"$schema": "https://cdn.jsdelivr.net/npm/@flamework-experimental/transformer@2.0.0-beta.0/flamework.config.schema.json",
+	// `bun run test` builds with FLAMEWORK_SCOPES=testing; every other build has no scope active.
+	"scopes": { "active": "${FLAMEWORK_SCOPES:-}" }
 }

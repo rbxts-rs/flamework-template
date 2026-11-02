@@ -1,9 +1,10 @@
 {
 	// The editor checks with TypeScript 7, as rbxtsc-fw builds: the "TypeScript 7" extension
-	// (TypeScriptTeam.native-preview) with the project's own typescript package. The built-in
-	// TypeScript 5 service would misread tsconfig.json and the 3-parameter iterables.
+	// (TypeScriptTeam.native-preview) with the project's own TypeScript 7, the typescript-7 package
+	// (`typescript` is 5.9.3, for flamework-test alone). The built-in TypeScript 5 service would
+	// misread tsconfig.json and the 3-parameter iterables.
 	"js/ts.experimental.useTsgo": true,
-	"js/ts.tsdk.path": "./node_modules/typescript",
+	"js/ts.tsdk.path": "./node_modules/typescript-7",
 	"files.eol": "\n",
 	"[typescript]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode",

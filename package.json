@@ -1,26 +1,31 @@
 {
-	"name": "flamework-template",
+	"name": "flamework-plugin-template",
 	"version": "0.1.0",
 	"private": true,
-	"description": "A minimal Roblox game on Flamework v2: rbxts-rs (rbxtsc-fw), Rojo, core, components and networking.",
+	"description": "A Flamework v2 plugin package (package/) and the game that tests it in Studio, built with rbxts-rs (rbxtsc-fw).",
+	"workspaces": ["package"],
 	"scripts": {
-		"build": "rbxtsc-fw",
+		"build": "rbxtsc-fw -p package && rbxtsc-fw",
+		"build:package": "rbxtsc-fw -p package",
 		"watch": "rbxtsc-fw -w",
-		"typecheck": "tsc --noEmit -p . --skipLibCheck",
+		"watch:package": "rbxtsc-fw -p package -w",
+		"typecheck": "node node_modules/typescript-7/bin/tsc --noEmit -p package --skipLibCheck && node node_modules/typescript-7/bin/tsc --noEmit -p . --skipLibCheck",
 		"serve": "rojo serve",
 		"place": "rojo build -o place.rbxl",
-		"format": "prettier --write src"
+		"test": "bun scripts/test.mjs",
+		"format": "prettier --write src package/src"
 	},
 	"dependencies": {
-		"@flamework-experimental/components": "2.0.0-beta.0",
 		"@flamework-experimental/core": "2.0.0-beta.0",
-		"@flamework-experimental/networking": "2.0.0-beta.0",
-		"@rbxts/services": "^1.6.0"
+		"@flamework-experimental/testing": "2.0.0-beta.0",
+		"@rbxts/services": "^1.6.0",
+		"@your-scope/player-events": "workspace:*"
 	},
 	"devDependencies": {
 		"@rbxts/compiler-types": "https://github.com/rbxts-rs/compiler-types/releases/download/v3.0.0-types.1-ts7.0/rbxts-compiler-types-3.0.0-types.1-ts7.0.tgz",
 		"@rbxts/types": "^1.0.955",
 		"prettier": "^3.8.1",
-		"typescript": "^7.0.2"
+		"typescript": "5.9.3",
+		"typescript-7": "npm:typescript@^7.0.2"
 	}
 }

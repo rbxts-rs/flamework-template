@@ -1,0 +1,57 @@
+// `bun run test`: builds the plugin package, then the game with the testing scope, runs the tests in
+// Studio, then rebuilds the game with no scope whatever happened, so out/ never keeps a build that
+// hosts the tests (guide 12, "Setting up"). rbxtsc-fw comes from rokit.toml (`rokit install`).
+// Start the script with `bun run test`, which puts node_modules/.bin on the PATH for
+// flamework-test; run on its own, `bun scripts/test.mjs` finds no flamework-test, or a global one
+// instead of the project's. Extra arguments go to flamework-test, as in
+// `bun run test --sections player-events`. Ctrl+C is the exception to "whatever happened":
+// `bun run` ends this script at once, before the rebuild, and flamework-test cleans up its own
+// window and session.
+
+/** Runs a command in the terminal. Returns its exit code, or undefined when it can't be started. */
+function run(command, env = process.env) {
+	try {
+		return Bun.spawnSync(command, { env, stdio: ["inherit", "inherit", "inherit"] }).exitCode ?? 1;
+	} catch (error) {
+		// Bun throws, rather than returning a code, for a command it cannot start.
+		const why =
+			error.code === "ENOENT" ? "not found on PATH" : `could not be started (${error.message})`;
+		console.error(`\n${command[0]} ${why}`);
+		return undefined;
+	}
+}
+
+// The package first: the game compiles against its typings and its flamework.build. A package has no
+// scope of its own, so the variable does not matter to it.
+let code = run(["rbxtsc-fw", "-p", "package"]);
+if (code === 0) code = run(["rbxtsc-fw"], { ...process.env, FLAMEWORK_SCOPES: "testing" });
+if (code === undefined) {
+	console.error(
+		"Nothing was built, and there is no rbxtsc-fw to rebuild out/ with: install it with " +
+			'`rokit install` (README, "Install").',
+	);
+	process.exit(127);
+}
+// test.rbxl, not place.rbxl: the place `bun run place` builds never holds the tests.
+if (code === 0) code = run(["rojo", "build", "-o", "test.rbxl"]) ?? 127;
+if (code === 0) {
+	const args = [
+		"test",
+		"test.rbxl",
+		"--original-place",
+		"tests/place.rbxlx",
+		...process.argv.slice(2),
+	];
+	code = run(["flamework-test", ...args]) ?? 127;
+}
+
+// The scope is set to nothing rather than left out, so that a scope in .env.local, or one exported
+// in the shell, cannot come back through this build.
+console.log("rebuilding out/ without the testing scope...");
+const rebuild = run(["rbxtsc-fw"], { ...process.env, FLAMEWORK_SCOPES: "" }) ?? 127;
+if (rebuild !== 0) {
+	console.error(
+		"The rebuild failed, so out/ may still hold the testing build: run `bun run build`.",
+	);
+}
+process.exit(code !== 0 ? code : rebuild);
