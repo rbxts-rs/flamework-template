@@ -15,8 +15,9 @@ This file adds only what this template does.
 - The `provider`, `service` and `controller` snippets (`.vscode/flamework-snippets.code-snippets`)
   all write the same provider: `@Provider()`, `implements OnStart`, no constructor. Add one to
   inject.
-- `flamework.config.json` holds only its `$schema` line, so every option is at its default:
-  `networking.serialization` off, no obfuscation.
+- `flamework.config.json` sets only `scopes.active`, from `FLAMEWORK_SCOPES`, which `bun run test`
+  sets to `testing` for its build. Every other option is at its default: `networking.serialization`
+  off, no obfuscation.
 - The `$schema` of `flamework.config.json` is Flamework 2.0.0-beta.0's schema, from the npm
   transformer package on jsDelivr (the schema `rbxtsc-fw` 0.1.0 validates with): change the
   version in the URL when you upgrade. The build ignores `$schema`.

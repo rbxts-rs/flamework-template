@@ -6,20 +6,24 @@
 	"scripts": {
 		"build": "rbxtsc-fw",
 		"watch": "rbxtsc-fw -w",
+		"typecheck": "node node_modules/typescript-7/bin/tsc --noEmit -p . --skipLibCheck",
 		"serve": "rojo serve",
 		"place": "rojo build -o place.rbxl",
+		"test": "bun scripts/test.mjs",
 		"format": "prettier --write src"
 	},
 	"dependencies": {
 		"@flamework-experimental/components": "2.0.0-beta.0",
 		"@flamework-experimental/core": "2.0.0-beta.0",
 		"@flamework-experimental/networking": "2.0.0-beta.0",
+		"@flamework-experimental/testing": "2.0.0-beta.0",
 		"@rbxts/services": "^1.6.0"
 	},
 	"devDependencies": {
 		"@rbxts/compiler-types": "https://github.com/rbxts-rs/compiler-types/releases/download/v3.0.0-types.1-ts7.0/rbxts-compiler-types-3.0.0-types.1-ts7.0.tgz",
 		"@rbxts/types": "^1.0.955",
 		"prettier": "^3.8.1",
-		"typescript": "^7.0.2"
+		"typescript": "5.9.3",
+		"typescript-7": "npm:typescript@^7.0.2"
 	}
 }

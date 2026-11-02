@@ -14,7 +14,7 @@ them (after `bun install`; without `node_modules` it loads nothing):
 The guides they point to are for the installed version. Most of their install commands use npm;
 use bun here. They are written for roblox-ts 3.0.0 with Flamework's npm transformer: here
 `rbxtsc-fw` replaces `rbxtsc` and the transformer (see [Stack](#stack)). Never install
-`roblox-ts`, TypeScript 5 or `@flamework-experimental/transformer`.
+`roblox-ts` or another TypeScript; the TypeScript 5 here is for `flamework-test` alone.
 
 ## Stack
 
@@ -26,13 +26,21 @@ use bun here. They are written for roblox-ts 3.0.0 with Flamework's npm transfor
   `types` listing the global typings (`"types", "compiler-types"`), `paths` instead of `baseUrl`,
   no `downlevelIteration`. `@rbxts/compiler-types` is the TypeScript 7 build (iterables with three
   type parameters), installed from its GitHub release `.tgz`.
-- The `typescript` dev dependency is TypeScript 7, for the editor only (README, "Editor").
+- `typescript-7` (`npm:typescript@^7`) is TypeScript 7, for the editor and `bun run typecheck`
+  (README, "Editor"). `typescript` is TypeScript 5.9.3 only because `flamework-test` reads
+  `flamework.config.json` through `@flamework-experimental/transformer`, which needs TypeScript 5's
+  API. Nothing else uses it; never check the project with it.
 - Rojo 7.7 (`rokit.toml`) builds the place from `default.project.json`.
-- **Flamework v2 beta:** `@flamework-experimental/core`, `components` and `networking`, all
-  pinned exactly at 2.0.0-beta.0. Every package shares one version; upgrade them together, and
+- **Flamework v2 beta:** `@flamework-experimental/core`, `components`, `networking` and `testing`,
+  all pinned exactly at 2.0.0-beta.0. Every package shares one version; upgrade them together, and
   `rbxtsc-fw` with them: its 0.1.0 has Flamework 2.0.0-beta.0's transformer built in (README,
   "Versions"). The tsconfig's `plugins` entry `@flamework-experimental/transformer` only turns
-  Flamework on in `rbxtsc-fw`; there is no npm package behind it.
+  Flamework on in `rbxtsc-fw`. The npm package of that name is installed all the same, as a peer
+  dependency of `testing`: `flamework-test` reads `flamework.config.json` with it. The build never
+  uses it.
+  - `testing` is in every build, not only test builds: both entry points include its
+    `TestingPlugin`, which stays inert without the `testing` scope. A mismatched version breaks
+    the game too.
 - Package manager: bun, one lockfile (`bun.lock`).
 
 ## Commands
@@ -43,6 +51,7 @@ use bun here. They are written for roblox-ts 3.0.0 with Flamework's npm transfor
 - `bun run watch` runs `rbxtsc-fw -w`, which rebuilds on change.
 - `bun run serve` runs `rojo serve` to sync into Studio, and `bun run place` builds `place.rbxl`.
   Build first: the project maps `out/` and `include/`.
+- `bun run test` runs the tests in Studio; see [Tests](#tests).
 - `bun run format` runs Prettier on `src/`: tabs, a width of 100, trailing commas.
 - Add packages with `bun add <name>`, or `bun add -d <name>` for build tools. Add a
   `@flamework-experimental/*` package with `bun add --exact <name>@2.0.0-beta.0`, the version the
@@ -84,19 +93,50 @@ use bun here. They are written for roblox-ts 3.0.0 with Flamework's npm transfor
 - Components for both realms go in `src/shared/components/`, registered from both entry points.
 - `out/`, `include/` and `flamework.build` are git-ignored; `flamework.config.json` is committed.
 
+## Tests
+
+Read `node_modules/@flamework-experimental/core/docs/ai/testing.md` before you write or run tests;
+`.claude/rules/testing.md` adds what this template does.
+
+- `bun run test` (`scripts/test.mjs`) builds with `FLAMEWORK_SCOPES=testing` and makes `test.rbxl`.
+  `flamework-test` then lays that over `tests/place.rbxlx` and runs the sections in Studio, on the
+  server and then on the client. Extra arguments go to `flamework-test`. It needs Studio's "MCP
+  server" setting on, and `lune`.
+- Tests live in `src/server/tests`, `src/client/tests` and `src/shared/tests` (both realms);
+  `src/server/tests/players.ts` is a plain module of helpers beside them. The entry points register
+  those folders only under the `testing` scope.
+- Whether the tests pass or fail, `bun run test` ends by rebuilding `out/` with `FLAMEWORK_SCOPES`
+  set to nothing, so `rojo serve` and `bun run place` never ship the test host. Never put the scope
+  in `.env` or `.env.local`: every other build reads them. A run stopped with Ctrl+C skips the
+  rebuild, so `out/` keeps the test build: run `bun run build`. Every run leaves `test.rbxl` and
+  `test.patched.rbxl` behind; they are git-ignored.
+- **How much to run:** as "How much to test" in the imported flamework.md says. A Studio run of
+  one feature is `bun run test --sections <section>` (`coin`, `coin-service`, `throttle`,
+  `coin-spin`, `levels`), plus `--realm` when one realm is enough. The whole `bun run test` only
+  when the user asks or agrees.
+- **Unattended:** give a run nobody watches `--keep-awake`: while the display sleeps,
+  RenderStepped stops and `onRender` tests fail.
+- **Hidden window:** on Windows the run opens Studio on a hidden desktop, so nothing shows and the
+  user's focus is left alone. Add `--show-windows` only when the user wants to watch, or when a
+  hidden window `never showed up on the MCP proxy`.
+- **The Studio lock:** one `flamework-test` command uses Studio at a time on the machine. A run
+  that finds another project's window or run holding it says whose and waits, up to 300 seconds,
+  then fails naming it. Wait or ask the user; never close a window you did not open.
+
 ## Gotchas
 
 - The editor must run TypeScript 7 (the "TypeScript 7" extension, `.vscode/settings.json`). VS
   Code's built-in TypeScript 5 service misreads `tsconfig.json` and the iterables of
   `@rbxts/compiler-types`, and reports errors the build does not have. To check from the command
-  line: `bunx tsc --noEmit -p . --skipLibCheck` (`@rbxts/types` has errors of its own that the
-  build never reports).
+  line: `bun run typecheck` (TypeScript 7, `--skipLibCheck`: `@rbxts/types` has errors of its
+  own that the build never reports).
 - `rbxtsc-fw` follows TypeScript 7.1 where it differs from TypeScript 5: some diagnostics,
   the order of union members and exports, and the names of Flamework's generated locals in
   `out/` differ from a roblox-ts 3.0.0 build; the behaviour does not.
 - `default.project.json` maps all of `node_modules/@flamework-experimental` in one line, so the
-  place gets more than code: core's docs as Folders, `core.docs` holding the empty `core.docs.ai`
-  and `core.docs.guide`. All expected; nothing reads them.
+  place gets more than code: an empty `transformer` Folder (the npm package `flamework-test` uses),
+  and core's docs as Folders, `core.docs` holding the empty `core.docs.ai` and `core.docs.guide`.
+  All expected; nothing reads them.
 - The build is not incremental (`tsconfig.json` sets no `incremental`), so an upgraded `rbxtsc-fw`
   just rebuilds.
 - Line endings are LF everywhere: `.gitattributes` sets `eol=lf`, which overrides `core.autocrlf`.
