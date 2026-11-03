@@ -2,5 +2,10 @@
 	"bin": "rbxtsc-fw",
 	"version": "0.1.0",
 	"config": "debd0791785f734c3b3d74876a9eaffaa1762dafed21551a7270e7615bf94a55",
-	"binaries": {}
+	"binaries": {
+		"x86_64-pc-windows-msvc": {
+			"url": "https://github.com/rbxts-rs/flamework-rs/releases/download/v0.1.0/flamework-rs-0.1.0-windows-x64.zip",
+			"sha256": "e53657cdfec2e4bd063eade6671b84c5040d9bd461adcc757b17ed256194dedf"
+		}
+	}
 }
