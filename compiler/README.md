@@ -99,8 +99,8 @@ another flamework-rs release:
 
 1. Replace this folder's `Cargo.toml`, `Cargo.lock`, `rust-toolchain.toml`, `.cargo/config.toml`, `src/`, `preset.json`
    and `rbxtsc.mjs` with those of the [Flamework template](https://github.com/rbxts-rs/flamework-template)'s
-   `compiler/` at its matching release, and move every `@flamework-experimental` package to the Flamework version
-   that release goes with (the template's README, "Versions").
+   `compiler/` at the commit that moved it to that flamework-rs release, and move every `@flamework-experimental`
+   package to the Flamework version that release goes with (the template's README, "Versions").
    Without other plugins that is all: the preset matches the config, so the binary is downloaded again.
 2. **With other plugins:** add them again as in "Adding a plugin", each at a version built for the rbxts-rs that
    flamework-rs release targets, and run
