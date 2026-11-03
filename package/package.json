@@ -6,9 +6,9 @@
 	"types": "out/index.d.ts",
 	"files": ["out", "flamework.build"],
 	"scripts": {
-		"build": "rbxtsc-fw",
-		"watch": "rbxtsc-fw -w",
-		"prepublishOnly": "rbxtsc-fw"
+		"build": "node ../compiler/rbxtsc.mjs build",
+		"watch": "node ../compiler/rbxtsc.mjs -w",
+		"prepublishOnly": "node ../compiler/rbxtsc.mjs build"
 	},
 	"publishConfig": {
 		"access": "public"
@@ -20,7 +20,7 @@
 		"@rbxts/services": "^1.6.0"
 	},
 	"devDependencies": {
-		"@flamework-experimental/core": "2.0.0-beta.0",
+		"@flamework-experimental/core": "2.0.0-beta.1",
 		"@rbxts/compiler-types": "https://github.com/rbxts-rs/compiler-types/releases/download/v3.0.0-types.1-ts7.0/rbxts-compiler-types-3.0.0-types.1-ts7.0.tgz",
 		"@rbxts/types": "^1.0.955"
 	}

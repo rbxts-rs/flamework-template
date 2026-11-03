@@ -26,12 +26,14 @@ does.
 
 ## This package's setup
 
-- **Versions:** core is a peer dependency as `^2.0.0-beta.0` (any 2.x from this release on, which
-  the stability promise covers) and a dev dependency at exactly 2.0.0-beta.0, the version the root
-  pins. Change both with the root's, to one release.
+- **Versions:** core is a peer dependency as `^2.0.0-beta.0` (any 2.x from 2.0.0-beta.0 on, which
+  the stability promise covers) and a dev dependency at exactly 2.0.0-beta.1, the version the root
+  pins. Change the dev dependency with the root's, to one release; raise the peer range only when
+  the package needs something a later release added.
 - **Pins:** `package/tsconfig.json` `paths` pins `@flamework-experimental/core` and
   `@rbxts/services` to `package/node_modules`, and the root `tsconfig.json` pins the same two to the
   game's `node_modules`. A new import the package shares with a dependency, or that its typings
   make, needs a line in each.
-- **Building:** `bun run build:package` (`rbxtsc-fw -p package`) writes `package/out/` and
-  `package/flamework.build`. `bun run build` and `bun run test` build it before the game.
+- **Building:** `bun run build:package` (`rbxtsc-fw -p package`, through the launcher) writes
+  `package/out/` and `package/flamework.build`. `bun run build` and `bun run test` build it before
+  the game.

@@ -1,6 +1,10 @@
 # Every project's, the root's and package/'s.
 node_modules/
 
+# The compiler's binary, which compiler/rbxtsc.mjs downloads or builds (compiler/.gitignore has these too).
+/compiler/bin
+/compiler/target
+
 # Build output: rbxtsc-fw writes out/ and include/ (with Flamework's include/flamework/), and
 # Flamework writes flamework.build. Every build recreates them.
 /out

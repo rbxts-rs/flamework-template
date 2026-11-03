@@ -20,40 +20,40 @@ nothing):
 The guides they point to are for the installed version. Most of their install commands use npm;
 use bun here. They are written for roblox-ts 3.0.0 with Flamework's npm transformer: here
 `rbxtsc-fw` replaces `rbxtsc` and the transformer (see [Stack](#stack)). Never install
-`roblox-ts` or another TypeScript; the TypeScript 5 here is for `flamework-test` alone.
+`roblox-ts`, TypeScript 5 or `@flamework-experimental/transformer`.
 
 ## Stack
 
 - `rbxtsc-fw` compiles `package/src/` to `package/out/` (`rbxtsc-fw -p package`), and `src/` to
   `out/`. It is rbxts-rs, roblox-ts rewritten in Rust on TypeScript 7.1, with Flamework's
   transformer compiled in, so it takes `rbxtsc`'s arguments and writes what roblox-ts 3.0.0
-  writes, apart from the differences under Gotchas. It comes from `rokit.toml`
-  (`rokit install`), not npm.
+  writes, apart from the differences under Gotchas. It is the project's own, in `compiler/`: a
+  Cargo package pinning rbxts-rs and flamework-rs by tag, and the launcher `compiler/rbxtsc.mjs`,
+  which runs `compiler/bin/<target triple>/rbxtsc-fw`. The first build downloads the release
+  binary (Windows x64) or builds it with Rust (README, "The compiler"; `compiler/README.md`). Not
+  from npm, not from Rokit; run it through the launcher, never a global `rbxtsc-fw`.
 - Both tsconfigs are in TypeScript 7's form: `module` `preserve`, `moduleResolution` `bundler`,
   `types` listing the global typings (`"types", "compiler-types"`), `paths` relative to the
   tsconfig and no `baseUrl`, no `downlevelIteration`. `@rbxts/compiler-types` is the TypeScript
   7 build (iterables with three type parameters), installed from its GitHub release `.tgz`.
-- `typescript-7` (`npm:typescript@^7`) is TypeScript 7, for the editor and `bun run typecheck`
-  (README, "Editor"). `typescript` is TypeScript 5.9.3 only because `flamework-test` reads
-  `flamework.config.json` through `@flamework-experimental/transformer`, which needs TypeScript 5's
-  API. Nothing else uses it; never check the project with it.
+- The `typescript` dev dependency is TypeScript 7, for the editor and `bun run typecheck` (README,
+  "Editor").
 - Rojo 7.7 (`rokit.toml`) builds the game's place from `default.project.json`.
 - **Flamework v2 beta:** `@flamework-experimental/core` and `testing`, both pinned exactly at
-  2.0.0-beta.0. Every package shares one version; upgrade them together, and `rbxtsc-fw` with
-  them: its 0.1.0 has Flamework 2.0.0-beta.0's transformer built in (README, "Versions"). The
-  tsconfigs' `plugins` entry `@flamework-experimental/transformer` only turns Flamework on in
-  `rbxtsc-fw`. The npm package of that name is installed all the same, as a peer dependency of
-  `testing`: `flamework-test` reads `flamework.config.json` with it. The build never uses it.
+  2.0.0-beta.1. Every package shares one version; upgrade them together, and `compiler/` with
+  them: its `rbxtsc-fw` 0.1.0 has Flamework 2.0.0-beta.1's transformer built in (README,
+  "Versions"). The tsconfigs' `plugins` entry `@flamework-experimental/transformer` only turns
+  Flamework on in `rbxtsc-fw`; there is no npm package behind it.
   - The package names core as a peer dependency as `^2.0.0-beta.0` and as a dev dependency at
-    exactly 2.0.0-beta.0: change both with the root's.
+    exactly 2.0.0-beta.1: change the dev dependency with the root's.
 - Package manager: bun, one lockfile (`bun.lock`). The root is a workspace with `package/` in it.
 
 ## Commands
 
 - `bun install`.
-- `bun run build` runs `rbxtsc-fw -p package`, then `rbxtsc-fw`: both must pass the check
-  described under "Building" in the imported flamework.md. `bun run build:package` builds the
-  package alone.
+- `bun run build` runs `rbxtsc-fw -p package`, then `rbxtsc-fw`, both through the launcher
+  (`node compiler/rbxtsc.mjs build`): both must pass the check described under "Building" in the
+  imported flamework.md. `bun run build:package` builds the package alone.
 - `bun run watch:package` and `bun run watch` rebuild the package and the game on change.
 - `bun run serve` runs `rojo serve` to sync into Studio, and `bun run place` builds `place.rbxl`.
   Build first: the project maps `out/`, `include/` and the package's `out/`.
@@ -62,10 +62,10 @@ use bun here. They are written for roblox-ts 3.0.0 with Flamework's npm transfor
   commas.
 - Add a package the plugin uses to `package/package.json`, from `package/` (`bun add <name>`), and
   pin it in `package/tsconfig.json` `paths`; one the game alone uses goes in the root. Add a
-  `@flamework-experimental/*` package with `bun add --exact <name>@2.0.0-beta.0`, the version the
+  `@flamework-experimental/*` package with `bun add --exact <name>@2.0.0-beta.1`, the version the
   others have.
 - Publish from `package/` with `bun publish`, after setting its `version`; `prepublishOnly` builds
-  it.
+  it (through `../compiler/rbxtsc.mjs`).
 
 ## Long-running commands: don't poll
 
@@ -146,4 +146,8 @@ Read `node_modules/@flamework-experimental/core/docs/ai/testing.md` before you w
 - `default.project.json` maps all of `node_modules/@flamework-experimental` in one line, so the
   place gets more than code: core's docs as Folders, `core.docs` holding the empty `core.docs.ai`
   and `core.docs.guide`. All expected; nothing reads them.
+- `compiler/` is part of the project: a change to its `Cargo.toml`, `Cargo.lock`,
+  `rust-toolchain.toml`, `.cargo/config.toml` or `src/` changes its config hash, and the launcher
+  then builds `rbxtsc-fw` with Rust instead of downloading it (`compiler/README.md`). Don't edit
+  them without being asked; never commit `compiler/bin/`.
 - Line endings are LF everywhere: `.gitattributes` sets `eol=lf`, which overrides `core.autocrlf`.
