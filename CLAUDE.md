@@ -20,8 +20,12 @@ use bun here. They are written for roblox-ts 3.0.0 with Flamework's npm transfor
 
 - `rbxtsc-fw` compiles `src/` to Luau in `out/`. It is rbxts-rs, roblox-ts rewritten in Rust on
   TypeScript 7.1, with Flamework's transformer compiled in, so it takes `rbxtsc`'s arguments and
-  writes what roblox-ts 3.0.0 writes, apart from the differences under Gotchas. It comes from
-  `rokit.toml` (`rokit install`), not npm.
+  writes what roblox-ts 3.0.0 writes, apart from the differences under Gotchas. It is the
+  project's own, in `compiler/`: a Cargo package pinning rbxts-rs and flamework-rs by tag, and the
+  launcher `compiler/rbxtsc.mjs`, which runs `compiler/bin/<target triple>/rbxtsc-fw`. The first
+  build downloads the release binary (Windows x64) or builds it with Rust (README, "The compiler";
+  `compiler/README.md`). Not from npm, not from Rokit; run it through the launcher, never a global
+  `rbxtsc-fw`.
 - `tsconfig.json` is in TypeScript 7's form: `module` `preserve`, `moduleResolution` `bundler`,
   `types` listing the global typings (`"types", "compiler-types"`), `paths` instead of `baseUrl`,
   no `downlevelIteration`. `@rbxts/compiler-types` is the TypeScript 7 build (iterables with three
@@ -29,23 +33,23 @@ use bun here. They are written for roblox-ts 3.0.0 with Flamework's npm transfor
 - The `typescript` dev dependency is TypeScript 7, for the editor only (README, "Editor").
 - Rojo 7.7 (`rokit.toml`) builds the place from `default.project.json`.
 - **Flamework v2 beta:** `@flamework-experimental/core`, `components` and `networking`, all
-  pinned exactly at 2.0.0-beta.0. Every package shares one version; upgrade them together, and
-  `rbxtsc-fw` with them: its 0.1.0 has Flamework 2.0.0-beta.0's transformer built in (README,
-  "Versions"). The tsconfig's `plugins` entry `@flamework-experimental/transformer` only turns
-  Flamework on in `rbxtsc-fw`; there is no npm package behind it.
+  pinned exactly at 2.0.0-beta.1. Every package shares one version; upgrade them together, and
+  `compiler/` with them: its `rbxtsc-fw` 0.1.0 has Flamework 2.0.0-beta.1's transformer built in
+  (README, "Versions"). The tsconfig's `plugins` entry `@flamework-experimental/transformer` only
+  turns Flamework on in `rbxtsc-fw`; there is no npm package behind it.
 - Package manager: bun, one lockfile (`bun.lock`).
 
 ## Commands
 
 - `bun install`.
-- `bun run build` runs `rbxtsc-fw`, the check described under "Building" in the imported
-  flamework.md.
-- `bun run watch` runs `rbxtsc-fw -w`, which rebuilds on change.
+- `bun run build` runs `rbxtsc-fw` through the launcher (`node compiler/rbxtsc.mjs build`), the
+  check described under "Building" in the imported flamework.md.
+- `bun run watch` runs `rbxtsc-fw -w` through the launcher, which rebuilds on change.
 - `bun run serve` runs `rojo serve` to sync into Studio, and `bun run place` builds `place.rbxl`.
   Build first: the project maps `out/` and `include/`.
 - `bun run format` runs Prettier on `src/`: tabs, a width of 100, trailing commas.
 - Add packages with `bun add <name>`, or `bun add -d <name>` for build tools. Add a
-  `@flamework-experimental/*` package with `bun add --exact <name>@2.0.0-beta.0`, the version the
+  `@flamework-experimental/*` package with `bun add --exact <name>@2.0.0-beta.1`, the version the
   others have. It needs no mapping: `default.project.json` maps the whole scope.
 
 ## Long-running commands: don't poll
@@ -101,4 +105,8 @@ use bun here. They are written for roblox-ts 3.0.0 with Flamework's npm transfor
   and `core.docs.guide`. All expected; nothing reads them.
 - The build is not incremental (`tsconfig.json` sets no `incremental`), so an upgraded `rbxtsc-fw`
   just rebuilds.
+- `compiler/` is part of the project: a change to its `Cargo.toml`, `Cargo.lock`,
+  `rust-toolchain.toml`, `.cargo/config.toml` or `src/` changes its config hash, and the launcher
+  then builds `rbxtsc-fw` with Rust instead of downloading it (`compiler/README.md`). Don't edit
+  them without being asked; never commit `compiler/bin/`.
 - Line endings are LF everywhere: `.gitattributes` sets `eol=lf`, which overrides `core.autocrlf`.

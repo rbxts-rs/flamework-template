@@ -4,17 +4,17 @@
 	"private": true,
 	"description": "A minimal Roblox game on Flamework v2: rbxts-rs (rbxtsc-fw), Rojo, core, components and networking.",
 	"scripts": {
-		"build": "rbxtsc-fw",
-		"watch": "rbxtsc-fw -w",
+		"build": "node compiler/rbxtsc.mjs build",
+		"watch": "node compiler/rbxtsc.mjs -w",
 		"typecheck": "tsc --noEmit -p . --skipLibCheck",
 		"serve": "rojo serve",
 		"place": "rojo build -o place.rbxl",
 		"format": "prettier --write src"
 	},
 	"dependencies": {
-		"@flamework-experimental/components": "2.0.0-beta.0",
-		"@flamework-experimental/core": "2.0.0-beta.0",
-		"@flamework-experimental/networking": "2.0.0-beta.0",
+		"@flamework-experimental/components": "2.0.0-beta.1",
+		"@flamework-experimental/core": "2.0.0-beta.1",
+		"@flamework-experimental/networking": "2.0.0-beta.1",
 		"@rbxts/services": "^1.6.0"
 	},
 	"devDependencies": {

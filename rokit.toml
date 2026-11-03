@@ -1,6 +1,4 @@
 # Tools installed by `rokit install`.
 [tools]
 rojo = "rojo-rbx/rojo@7.7.0"
-# rbxtsc-fw: the roblox-ts compiler (rbxts-rs, TypeScript 7) with Flamework compiled in. Its version goes
-# with the @flamework-experimental packages' (README, "Versions"): upgrade them together.
-rbxtsc-fw = "rbxts-rs/flamework-rs@0.1.0"
+# The compiler, rbxtsc-fw, is not a Rokit tool: compiler/ holds the project's own (README, "The compiler").
