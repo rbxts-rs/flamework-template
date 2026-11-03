@@ -1,11 +1,12 @@
 // `bun run test`: builds with the testing scope, runs the tests in Studio, then rebuilds with no
 // scope whatever happened, so out/ never keeps a build that hosts the tests (guide 12, "Setting
-// up"). rbxtsc-fw comes from rokit.toml (`rokit install`). Start the script with `bun run test`,
-// which puts node_modules/.bin on the PATH for flamework-test; run on its own, `bun
-// scripts/test.mjs` finds no flamework-test, or a global one instead of the project's. Extra
-// arguments go to flamework-test, as in `bun run test --sections levels`. Ctrl+C is the
-// exception to "whatever happened": `bun run` ends this script at once, before the rebuild, and
-// flamework-test cleans up its own window and session.
+// up"). Each build runs rbxtsc-fw through compiler/rbxtsc.mjs, which downloads or builds it the
+// first time (README, "The compiler"). Start the script with `bun run test`, which puts
+// node_modules/.bin on the PATH for flamework-test; run on its own, `bun scripts/test.mjs` finds
+// no flamework-test, or a global one instead of the project's. Extra arguments go to
+// flamework-test, as in `bun run test --sections levels`. Ctrl+C is the exception to "whatever
+// happened": `bun run` ends this script at once, before the rebuild, and flamework-test cleans up
+// its own window and session.
 
 /** Runs a command in the terminal. Returns its exit code, or undefined when it can't be started. */
 function run(command, env = process.env) {
@@ -20,11 +21,13 @@ function run(command, env = process.env) {
 	}
 }
 
-let code = run(["rbxtsc-fw"], { ...process.env, FLAMEWORK_SCOPES: "testing" });
+const RBXTSC = ["node", "compiler/rbxtsc.mjs", "build"];
+
+let code = run(RBXTSC, { ...process.env, FLAMEWORK_SCOPES: "testing" });
 if (code === undefined) {
 	console.error(
-		"Nothing was built, and there is no rbxtsc-fw to rebuild out/ with: install it with " +
-			'`rokit install` (README, "Install").',
+		"Nothing was built, and there is no Node to run rbxtsc-fw's launcher with: install " +
+			"Node 18 or newer (README, \"Install\").",
 	);
 	process.exit(127);
 }
@@ -44,7 +47,7 @@ if (code === 0) {
 // The scope is set to nothing rather than left out, so that a scope in .env.local, or one exported
 // in the shell, cannot come back through this build.
 console.log("rebuilding out/ without the testing scope...");
-const rebuild = run(["rbxtsc-fw"], { ...process.env, FLAMEWORK_SCOPES: "" }) ?? 127;
+const rebuild = run(RBXTSC, { ...process.env, FLAMEWORK_SCOPES: "" }) ?? 127;
 if (rebuild !== 0) {
 	console.error(
 		"The rebuild failed, so out/ may still hold the testing build: run `bun run build`.",

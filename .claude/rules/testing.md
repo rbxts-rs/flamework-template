@@ -24,10 +24,11 @@ writing and running tests. This file adds only what this template does.
   the client `coin-spin`, and both `levels`.
 - This template has one Rojo project, so `--parallel`, which is for a run of several, does not
   apply.
-- `lune`, `rojo` and `rbxtsc-fw` come from `rokit.toml` (`rokit install`), and `flamework-test`
-  from `node_modules/.bin`, which `bun run test` puts on the PATH. A command the script can't find
-  (`rojo`, `flamework-test`) is reported as `<name> not found on PATH`, and the rebuild still runs.
-  Without `rbxtsc-fw`, nothing is built at all: run `rokit install`.
+- `lune` and `rojo` come from `rokit.toml` (`rokit install`), `rbxtsc-fw` from `compiler/`
+  (each build runs `node compiler/rbxtsc.mjs`, which downloads or builds it the first time), and
+  `flamework-test` from `node_modules/.bin`, which `bun run test` puts on the PATH. A command the
+  script can't find (`rojo`, `flamework-test`) is reported as `<name> not found on PATH`, and the
+  rebuild still runs. Without `node`, nothing is built at all: install Node 18 or newer.
 - Before it opens its own window, the run closes a window left from an earlier run that shows this
   very `test.patched.rbxl`: one on the user's desktop is asked first and ended after ten seconds,
   one on the hidden desktop is ended at once. Any other window is left alone.

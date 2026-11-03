@@ -6,13 +6,13 @@ transformer compiled in ([flamework-rs](https://github.com/rbxts-rs/flamework-rs
 Flamework's core, components and networking; a small coin example shows each part, to be replaced
 with your game.
 
-**Windows x64 only for now:** flamework-rs releases `rbxtsc-fw` for Windows x64 alone. On another
-platform, build it from source (below), which is untested there.
+**Windows x64 prebuilt only for now:** flamework-rs releases `rbxtsc-fw` for Windows x64 alone. On
+another platform the first build compiles it with Rust (below), which is untested there.
 
 ## Install
 
-You need [bun](https://bun.sh) and [Rokit](https://github.com/rojo-rbx/rokit), plus the Rojo plugin
-for Studio.
+You need [Node](https://nodejs.org) 18 or newer, [bun](https://bun.sh) and
+[Rokit](https://github.com/rojo-rbx/rokit), plus the Rojo plugin for Studio.
 
 ```sh
 git clone <this repository> my-game
@@ -23,30 +23,31 @@ bun run build
 rojo serve
 ```
 
-`rokit install` installs the tools in `rokit.toml`: Rojo 7.7, Lune and `rbxtsc-fw` (the first
-time, it asks you to trust `rbxts-rs/flamework-rs`, the repository `rbxtsc-fw` is released from).
-Open a place in Studio (a new Baseplate will do), connect from the Rojo plugin and press Play.
-Press F to spawn a coin in front of you, then walk into it: the output prints your coins and level.
+`rokit install` installs Rojo 7.7 and Lune (`rokit.toml`), and the first `bun run build` gets the
+compiler (below). Open a place in Studio (a new Baseplate will do), connect from the Rojo plugin and
+press Play. Press F to spawn a coin in front of you, then walk into it: the output prints your coins
+and level.
 
 `bun run watch` rebuilds as you edit, `bun run place` builds `place.rbxl`, and `bun run format`
 formats `src/`.
 
-### Without Rokit: build `rbxtsc-fw` from source
+### The compiler
 
-With [Rust](https://rustup.rs) installed, Cargo builds `rbxtsc-fw` from the flamework-rs commit
-that the release was made from:
+The project carries its own `rbxtsc-fw` in `compiler/`: a small Cargo package (rbxts-rs's command
+line with Flamework compiled in, every version pinned exactly) and a launcher,
+`compiler/rbxtsc.mjs`, which `bun run build` and `bun run watch` run. Nothing to install for it:
+the first build puts the binary in `compiler/bin/` (git-ignored).
 
-```sh
-rustup toolchain install 1.99.1 --profile minimal
-cargo +1.99.1 install --locked --git https://github.com/rbxts-rs/flamework-rs --rev <hash> rbxtsc_fw
-```
+- **Windows x64:** the launcher downloads the prebuilt `rbxtsc-fw` of the flamework-rs release that
+  `compiler/` matches (a few seconds, its sha256 checked).
+- **Another platform**, or a changed `compiler/` (a plugin added, a version moved): there is no
+  prebuilt binary for it, so it is built with Rust. On a terminal the launcher asks first
+  (`Build it with Rust now?`); `node compiler/rbxtsc.mjs --build` builds without asking. It needs
+  [rustup](https://rustup.rs), which installs the Rust version `compiler/rust-toolchain.toml` names
+  by itself; a clean build takes a few minutes.
 
-`<hash>` is the commit of flamework-rs's `v0.1.0` tag. `1.99.1` is the Rust version flamework-rs
-pins (its `rust-toolchain.toml`): `cargo install --git` builds with the toolchain of the folder it
-runs in, so an older default fails. The build takes a while (release profile, fat LTO). It puts
-`rbxtsc-fw` in Cargo's `bin` folder, which rustup adds to `PATH`; add `--root <folder>` to keep one
-folder per version. Install Rojo 7.7 your own way, and remove the `rbxtsc-fw` line from
-`rokit.toml` if you use Rokit for Rojo only.
+`node compiler/rbxtsc.mjs --where` shows the binary, whether it is up to date, and the config hash.
+`compiler/README.md` covers the launcher, adding a plugin and changing versions.
 
 ### Versions
 
@@ -55,11 +56,11 @@ folder per version. Install Rojo 7.7 your own way, and remove the `rbxtsc-fw` li
 
 | `rbxtsc-fw` (flamework-rs) | `@flamework-experimental/*` |
 | -------------------------- | --------------------------- |
-| 0.1.0                      | 2.0.0-beta.0                |
+| 0.1.0                      | 2.0.0-beta.1                |
 
-Upgrade them together: the `rbxtsc-fw` line in `rokit.toml`, and every `@flamework-experimental/*`
-package in `package.json` (all share one version). `rbxtsc-fw --build-info` prints the Flamework
-version it has (its `plugin` line).
+Upgrade them together: `compiler/` (`compiler/README.md`, "Changing versions"), and every
+`@flamework-experimental/*` package in `package.json` (all share one version).
+`node compiler/rbxtsc.mjs --build-info` prints the Flamework version it has (its `plugin` line).
 
 ## Editor
 
@@ -71,14 +72,9 @@ not have.
 - Install the recommended extensions (`.vscode/extensions.json`): **TypeScript 7**
   (`TypeScriptTeam.native-preview`), Rojo and Prettier.
 - `.vscode/settings.json` turns TypeScript 7 on (`js/ts.experimental.useTsgo`) and points it at the
-  project's TypeScript 7, the `typescript-7` package (`js/ts.tsdk.path`, installed by
-  `bun install`). VS Code asks once whether to trust the workspace and use its version; say yes.
-  Without the extension, VS Code falls back to its TypeScript 5 service and its false errors.
-- **TypeScript 5 is here for `flamework-test` alone.** The `typescript` package is 5.9.3 because
-  `flamework-test` (2.0.0-beta.0) reads `flamework.config.json` through
-  `@flamework-experimental/transformer`, which needs TypeScript 5's API. Nothing else uses it: the
-  build is `rbxtsc-fw` and the editor TypeScript 7. Once a `flamework-test` release no longer needs
-  it, remove it and make `typescript-7` the `typescript` package again.
+  project's `typescript` package (`js/ts.tsdk.path`, TypeScript 7, installed by `bun install`). VS
+  Code asks once whether to trust the workspace and use its version; say yes. Without the
+  extension, VS Code falls back to its TypeScript 5 service and its false errors.
 - The roblox-ts extension (`roblox-ts.vscode-roblox-ts`) is a plugin of the TypeScript 5 service and
   starts the npm `rbxtsc`, so it does nothing here. Use `bun run watch` in a terminal.
 - From the command line, `bun run typecheck` checks the project with the same TypeScript 7
@@ -148,9 +144,9 @@ tests are still compiled in, but nothing loads them.
 The Flamework guides for the installed version are in
 `node_modules/@flamework-experimental/core/docs/guide/`. Start with `01-getting-started.md`. They
 are written for roblox-ts 3.0.0 with Flamework's npm transformer; here `rbxtsc-fw` replaces both
-(no `roblox-ts` to install; the transformer and TypeScript 5 that `bun install` brings are for
-`flamework-test` alone, see "Editor"), and the tsconfig is in TypeScript 7's form. The
-Flamework website documents v1, most of which no longer applies.
+(no `roblox-ts`, `typescript` 5 or `@flamework-experimental/transformer` to install), and the
+tsconfig is in TypeScript 7's form. The Flamework website documents v1, most of which no longer
+applies.
 
 `CLAUDE.md` and `.claude/rules/` are the instructions for Claude Code. `CLAUDE.md` loads
 Flamework's own, which ship in core next to the guides (`docs/ai/`), and the rules add only what
