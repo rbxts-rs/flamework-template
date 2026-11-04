@@ -1,4 +1,4 @@
-/node_modules
+node_modules/
 
 # The compiler's binary, which compiler/rbxtsc.mjs downloads or builds (compiler/.gitignore has these too).
 /compiler/bin
