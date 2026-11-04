@@ -21,5 +21,5 @@ This file adds only what this template does.
 - `flamework.config.json` is the game's, and sets only `scopes.active`, from `FLAMEWORK_SCOPES`,
   which `bun run test` sets to `testing` for its build. Every other option is at its default.
 - The `$schema` of `flamework.config.json` is Flamework 2.0.0-beta.1's schema, from the npm
-  transformer package on jsDelivr (the schema `rbxtsc-fw` 0.1.0 validates with): change the
+  transformer package on jsDelivr (the schema `rbxtsc-fw` 0.1.1 validates with): change the
   version in the URL when you upgrade. The build ignores `$schema`.

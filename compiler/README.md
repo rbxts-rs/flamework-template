@@ -37,7 +37,7 @@ passes the exit code through and forwards Ctrl+C and SIGTERM to it, waiting for 
    unzips it into `bin/<target triple>/` and stamps it. It prints one line:
 
    ```text
-   rbxtsc.mjs: downloaded rbxtsc-fw 0.1.0 (x86_64-pc-windows-msvc) from https://github.com/rbxts-rs/flamework-rs/releases/download/v0.1.0/flamework-rs-0.1.0-windows-x64.zip, sha256 <sha256>
+   rbxtsc.mjs: downloaded rbxtsc-fw 0.1.1 (x86_64-pc-windows-msvc) from https://github.com/rbxts-rs/flamework-rs/releases/download/v0.1.1/flamework-rs-0.1.1-windows-x64.zip, sha256 <sha256>
    ```
 
 2. **Build.** Otherwise the binary has to be built with Rust: the config changed (a plugin added, a version moved),
@@ -112,10 +112,10 @@ another flamework-rs release:
 ```json
 {
 	"bin": "rbxtsc-fw",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"config": "<config hash>",
 	"binaries": {
-		"x86_64-pc-windows-msvc": { "url": "https://github.com/…/flamework-rs-0.1.0-windows-x64.zip", "sha256": "<sha256 of the zip>" }
+		"x86_64-pc-windows-msvc": { "url": "https://github.com/…/flamework-rs-0.1.1-windows-x64.zip", "sha256": "<sha256 of the zip>" }
 	}
 }
 ```
