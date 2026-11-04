@@ -35,7 +35,7 @@ use bun here. They are written for roblox-ts 3.0.0 with Flamework's npm transfor
 - Rojo 7.7 (`rokit.toml`) builds the place from `default.project.json`.
 - **Flamework v2 beta:** `@flamework-experimental/core`, `components`, `networking` and `testing`,
   all pinned exactly at 2.0.0-beta.1. Every package shares one version; upgrade them together, and
-  `compiler/` with them: its `rbxtsc-fw` 0.1.0 has Flamework 2.0.0-beta.1's transformer built in
+  `compiler/` with them: its `rbxtsc-fw` 0.1.1 has Flamework 2.0.0-beta.1's transformer built in
   (README, "Versions"). The tsconfig's `plugins` entry `@flamework-experimental/transformer` only
   turns Flamework on in `rbxtsc-fw`; there is no npm package behind it.
   - `testing` is in every build, not only test builds: both entry points include its
