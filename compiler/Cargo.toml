@@ -20,9 +20,9 @@ name = "rbxtsc-fw"
 path = "src/main.rs"
 
 [dependencies]
-rbxts_cli = { git = "https://github.com/rbxts-rs/rbxts-rs", tag = "v0.1.1" }
-# The Flamework plugin. Its tag targets the same rbxts-rs tag as rbxts_cli above (flamework-rs 0.1.0: rbxts-rs v0.1.1).
-flamework_rs = { git = "https://github.com/rbxts-rs/flamework-rs", tag = "v0.1.0" }
+rbxts_cli = { git = "https://github.com/rbxts-rs/rbxts-rs", tag = "v0.1.2" }
+# The Flamework plugin. Its tag targets the same rbxts-rs tag as rbxts_cli above (flamework-rs 0.1.1: rbxts-rs v0.1.2).
+flamework_rs = { git = "https://github.com/rbxts-rs/flamework-rs", tag = "v0.1.1" }
 # The allocator rbxts-rs's own rbxtsc and flamework-rs's rbxtsc-fw use (src/main.rs).
 mimalloc-safe = { version = "=0.1.68", features = ["v3", "no_thp"] }
 # Another plugin, pinned to a tag that targets the same rbxts-rs tag as rbxts_cli above:
