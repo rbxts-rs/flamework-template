@@ -56,7 +56,7 @@ the first build puts the binary in `compiler/bin/` (git-ignored).
 
 | `rbxtsc-fw` (flamework-rs) | `@flamework-experimental/*` |
 | -------------------------- | --------------------------- |
-| 0.1.0, 0.1.1               | 2.0.0-beta.1                |
+| 0.1.0, 0.1.1, 0.1.2        | 2.0.0-beta.1                |
 
 Upgrade them together: `compiler/` (`compiler/README.md`, "Changing versions"), and every
 `@flamework-experimental/*` package in `package.json` (all share one version).
