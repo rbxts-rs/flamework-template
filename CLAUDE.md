@@ -6,12 +6,18 @@ to be replaced.
 
 ## Flamework
 
-Flamework's own instructions ship in core, so they match the installed version. This line loads
-them (after `bun install`; without `node_modules` it loads nothing):
+Flamework's own instructions are the `flamework` Claude Code plugin, which `.claude/settings.json`
+registers (the `flamework-experimental` marketplace, pinned to this project's release by the tag
+`claude-plugin-v2.0.0-beta.1`) and enables. Settings don't install it: once the folder is trusted,
+each person runs `claude plugin install flamework@flamework-experimental --scope project` once (or
+`/plugin install flamework@flamework-experimental` in a session). Its skills: `flamework:flamework`
+(the rules, for any Flamework work), `flamework:providers`, `flamework:components`,
+`flamework:networking`, `flamework:testing` and `flamework:plugins`. If they are missing, ask the
+user to install the plugin. Upgrading Flamework moves the tag to the new release's
+(`claude-plugin-v<version>`).
 
-@node_modules/@flamework-experimental/core/docs/ai/flamework.md
-
-The guides they point to are for the installed version. Most of their install commands use npm;
+The guides they point to are in the plugin, for the same release, and in
+`node_modules/@flamework-experimental/core/docs/guide/`. Most of their install commands use npm;
 use bun here. They are written for roblox-ts 3.0.0 with Flamework's npm transformer: here
 `rbxtsc-fw` replaces `rbxtsc` and the transformer (see [Stack](#stack)). Never install
 `roblox-ts`, TypeScript 5 or `@flamework-experimental/transformer`.
@@ -43,7 +49,7 @@ use bun here. They are written for roblox-ts 3.0.0 with Flamework's npm transfor
 
 - `bun install`.
 - `bun run build` runs `rbxtsc-fw` through the launcher (`node compiler/rbxtsc.mjs build`), the
-  check described under "Building" in the imported flamework.md.
+  check described under "Building" in the `flamework:flamework` skill.
 - `bun run watch` runs `rbxtsc-fw -w` through the launcher, which rebuilds on change.
 - `bun run serve` runs `rojo serve` to sync into Studio, and `bun run place` builds `place.rbxl`.
   Build first: the project maps `out/` and `include/`.
