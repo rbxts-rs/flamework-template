@@ -58,7 +58,8 @@ the first build puts the binary in `compiler/bin/` (git-ignored).
 
 Upgrade them together: `compiler/` (`compiler/README.md`, "Changing versions"), every
 `@flamework-experimental/*` package in `package.json` (all share one version), and the Claude Code
-plugin's `ref` in `.claude/settings.json` (`claude-plugin-v<version>`).
+plugin's `ref` in `.claude/settings.json` (`claude-plugin-v<version>`), then
+`claude plugin update flamework@flamework-experimental --scope project`.
 `node compiler/rbxtsc.mjs --build-info` prints the Flamework version it has (its `plugin` line).
 
 ## Editor
