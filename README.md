@@ -56,8 +56,9 @@ the first build puts the binary in `compiler/bin/` (git-ignored).
 | -------------------------- | --------------------------- |
 | 0.1.0, 0.1.1, 0.1.2        | 2.0.0-beta.1                |
 
-Upgrade them together: `compiler/` (`compiler/README.md`, "Changing versions"), and every
-`@flamework-experimental/*` package in `package.json` (all share one version).
+Upgrade them together: `compiler/` (`compiler/README.md`, "Changing versions"), every
+`@flamework-experimental/*` package in `package.json` (all share one version), and the Claude Code
+plugin's `ref` in `.claude/settings.json` (`claude-plugin-v<version>`).
 `node compiler/rbxtsc.mjs --build-info` prints the Flamework version it has (its `plugin` line).
 
 ## Editor
@@ -184,6 +185,13 @@ both (no `roblox-ts`, `typescript` 5 or `@flamework-experimental/transformer` to
 tsconfigs are in TypeScript 7's form. The Flamework website documents v1, most of which no longer
 applies.
 
-`CLAUDE.md` and `.claude/rules/` are the instructions for Claude Code. `CLAUDE.md` loads
-Flamework's own, which ship in core next to the guides (`docs/ai/`), and the rules add only what
-is specific to this template.
+`CLAUDE.md` and `.claude/rules/` are the instructions for Claude Code that are specific to this
+template. Flamework's own are the `flamework` Claude Code plugin, made of skills, with the guides
+inside: `.claude/settings.json` registers its marketplace (`flamework-experimental`, pinned to the
+release's tag) and enables it. Settings don't install it: once you trust the folder, run once
+
+```sh
+claude plugin install flamework@flamework-experimental --scope project
+```
+
+(or `/plugin install flamework@flamework-experimental` in a Claude Code session).

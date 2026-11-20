@@ -8,16 +8,19 @@ replaced.
 
 ## Flamework
 
-Flamework's own instructions ship in core, so they match the installed version. These lines load
-the rules every project follows, and those for a plugin and a package that other games install,
-which is what this repository is about (after `bun install`; without `node_modules` they load
-nothing):
+Flamework's own instructions are the `flamework` Claude Code plugin, which `.claude/settings.json`
+registers (the `flamework-experimental` marketplace, pinned to this project's release by the tag
+`claude-plugin-v2.0.0-beta.1`) and enables. Settings don't install it: once the folder is trusted,
+each person runs `claude plugin install flamework@flamework-experimental --scope project` once (or
+`/plugin install flamework@flamework-experimental` in a session). Its skills: `flamework:flamework`
+(the rules, for any Flamework work), `flamework:plugins` (a plugin, and a package that other
+games install, which is what this repository is about: use it for any work on `package/`),
+`flamework:providers`, `flamework:components`, `flamework:networking` and `flamework:testing`. If
+they are missing, ask the user to install the plugin. Upgrading Flamework moves the tag to the new
+release's (`claude-plugin-v<version>`).
 
-@node_modules/@flamework-experimental/core/docs/ai/flamework.md
-
-@node_modules/@flamework-experimental/core/docs/ai/plugins.md
-
-The guides they point to are for the installed version. Most of their install commands use npm;
+The guides they point to are in the plugin, for the same release, and in
+`node_modules/@flamework-experimental/core/docs/guide/`. Most of their install commands use npm;
 use bun here. They are written for roblox-ts 3.0.0 with Flamework's npm transformer: here
 `rbxtsc-fw` replaces `rbxtsc` and the transformer (see [Stack](#stack)). Never install
 `roblox-ts`, TypeScript 5 or `@flamework-experimental/transformer`.
@@ -53,7 +56,7 @@ use bun here. They are written for roblox-ts 3.0.0 with Flamework's npm transfor
 - `bun install`.
 - `bun run build` runs `rbxtsc-fw -p package`, then `rbxtsc-fw`, both through the launcher
   (`node compiler/rbxtsc.mjs build`): both must pass the check described under "Building" in the
-  imported flamework.md. `bun run build:package` builds the package alone.
+  `flamework:flamework` skill. `bun run build:package` builds the package alone.
 - `bun run watch:package` and `bun run watch` rebuild the package and the game on change.
 - `bun run serve` runs `rojo serve` to sync into Studio, and `bun run place` builds `place.rbxl`.
   Build first: the project maps `out/`, `include/` and the package's `out/`.
